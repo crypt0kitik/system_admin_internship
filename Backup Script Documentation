@@ -1,0 +1,65 @@
+Backup Script Documentation
+
+The Backup Script is a Python script designed to perform backups 
+of specified directories based on a configuration file. 
+This documentation provides instructions on how to use 
+the script and configure the backup settings.
+
+1). Prerequisites
+- Python 3 installed on your system.
+- Basic understanding of Python and working with command-line interfaces.
+
+2). Getting Started
+1. Download the Backup Script files to your local machine or server.
+2. Ensure that the following Python modules are installed:
+- os
+- shutil
+- datetime
+- logging
+- configparser
+
+3). Configuration
+The Backup Script utilizes a configuration file (backup_config.conf) 
+to specify the backup settings. Follow the steps below to configure the script:
+
+1. Open the backup_config.conf file in a text editor.
+2. The configuration file follows the INI file format and consists of sections and key-value pairs.
+3. Modify the following sections and keys according to your backup requirements:
+    [BACKUP] section:
+    - Directories: Specify the directories you want to back up, separated by commas. For example:
+    Directories = /path/to/directory1, /path/to/directory2, /path/to/directory3
+
+    - Location: Specify the location where the backups should be stored. For example:
+    Location = /path/to/backup/location
+
+    - MaxBackups: Specify the maximum number of backups to keep. Older backups 
+    will be deleted when the limit is reached. For example:
+    MaxBackups = 5
+
+4). Running the Script
+1. Open a command-line interface or terminal.
+2. Navigate to the directory where the Backup Script files are located.
+3. Run the script using the following command:
+python backup_script.py
+4. The script will read the configuration file, create a backup directory 
+with a timestamp, perform the backup, and manage the backups based on the specified settings.
+5. The progress and any encountered errors will be logged in a backup.log file in the same directory.
+
+5). Scheduling as a Task
+To automate the backup process by scheduling it as a task, follow the instructions 
+below (specific steps may vary depending on your operating system):
+
+1. Identify the appropriate task scheduler for your operating system (e.g., 
+Task Scheduler on Windows, Cron on Unix-like systems).
+2. Create a new task and configure it to run the Backup Script by providing 
+the necessary command-line arguments (e.g., python backup_script.py).
+3. Set the desired schedule for the task, such as daily or weekly backups.
+4. Save and activate the task.
+5. The Backup Script will now run automatically based on the scheduled task.
+
+6). Troubleshooting
+If you encounter any issues or errors during the backup process, refer 
+to the backup.log file for detailed information about the problem. 
+Additionally, ensure that the required directories and files are accessible 
+and have the necessary permissions.
+
