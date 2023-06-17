@@ -1,10 +1,10 @@
 import os
 import shutil
-import datetime
+from datetime import datetime
 import logging
 import configparser
 
-# Read the configuration file
+# read the configuration file
 def read_config():
     config = configparser.ConfigParser()
     config.read('backup_config.conf')
@@ -13,30 +13,46 @@ def read_config():
     max_backups = int(config.get('BACKUP', 'MaxBackups'))
     return backup_dirs, backup_location, max_backups
 
-# Create backup directory with timestamp
+# create backup directory
 def create_backup_directory(backup_location):
-    timestamp = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
-    backup_directory = os.path.join(backup_location, f'backup_{timestamp}')
+    timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+    backup_directory = os.path.join(backup_location, f"backup_{timestamp}")
     os.makedirs(backup_directory)
     return backup_directory
 
-# Perform the backup
+# perform the backup
 def perform_backup(backup_dirs, backup_directory):
-    for dir in backup_dirs:
-        shutil.copytree(dir, os.path.join(backup_directory, os.path.basename(dir)))
+    for directory in backup_dirs:
+        shutil.copytree(directory, os.path.join(backup_directory, os.path.basename(directory)))
 
-# Manage the number of backups
+# manage
 def manage_backups(backup_location, max_backups):
-    backup_directories = sorted(os.listdir(backup_location), reverse=True)
-    if len(backup_directories) > max_backups:
-        for directory in backup_directories[max_backups:]:
-            shutil.rmtree(os.path.join(backup_location, directory))
+    backups = os.listdir(backup_location)
+    backups = [backup for backup in backups if os.path.isdir(os.path.join(backup_location, backup))]
+    backups.sort(reverse=True)
 
-# Configure logging
+    if len(backups) >= max_backups:
+        for directory in backups[max_backups:]:
+            directory_path = os.path.join(backup_location, directory)
+            try:
+                shutil.rmtree(directory_path)
+            except NotADirectoryError:
+                os.remove(directory_path)
+
+def backup_files(backup_dirs, backup_location):
+    backup_directory = create_backup_directory(backup_location)
+
+    for directory in backup_dirs:
+        try:
+            shutil.copytree(directory, os.path.join(backup_directory, os.path.basename(directory)))
+        except Exception as e:
+            print(f"An error occurred during the backup process: {e}")
+
+# configure logging
 def configure_logging():
     logging.basicConfig(filename='backup.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-# Main function
+# main function
 def main():
     # Read configuration
     backup_dirs, backup_location, max_backups = read_config()
